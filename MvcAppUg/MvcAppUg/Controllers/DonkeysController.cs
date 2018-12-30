@@ -45,6 +45,22 @@ namespace MvcAppUg.Controllers
             return View(donkey);
         }
 
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return BackToIndex();
+            }
+
+            var donkey = await _db.Donkeys.SingleOrDefaultAsync(m => m.Id == id);
+
+            if (donkey == null)
+            {
+                return BackToIndex();
+            }
+            return View(donkey);
+        }
+
         //post
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -79,6 +95,27 @@ namespace MvcAppUg.Controllers
             }
             //if model is not valid, osiolek has no ogon or something, zwracamy liste osiolkow
             return View(donkey);
+        }
+
+        [HttpPost, ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditDonkey(Donkey donkey)
+        {
+            var editDonkey = _db.Donkeys.Where(x => x.Id == donkey.Id).FirstOrDefault();
+            if (editDonkey == null)
+                BackToIndex();
+
+            if (ModelState.IsValid)
+            {
+                editDonkey.Age = donkey.Age;
+                editDonkey.Experience = donkey.Experience;
+                editDonkey.Name = donkey.Name;
+                _db.Donkeys.Update(editDonkey);
+                await _db.SaveChangesAsync();
+                return BackToIndex();
+            }
+            //
+            return View(editDonkey);
         }
 
         protected override void Dispose(bool disposing)
