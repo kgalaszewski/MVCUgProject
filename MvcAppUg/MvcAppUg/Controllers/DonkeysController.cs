@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MvcAppUg.Models;
 
 namespace MvcAppUg.Controllers
@@ -27,13 +28,42 @@ namespace MvcAppUg.Controllers
             return View();
         }
 
+        //get
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var donkey = await _db.Donkeys.SingleOrDefaultAsync(m => m.Id == id);
+
+            if (donkey == null)
+            {
+                return NotFound();
+            }
+            return View(donkey);
+        }
+
+        //post
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveDonkey(int id)
+        {
+            var donkey = await _db.Donkeys.SingleOrDefaultAsync(m => m.Id == id);
+            _db.Donkeys.Remove(donkey);
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create (Donkey donkey)
         {
             if (ModelState.IsValid)
             {
-                _db.Add(donkey);
+                _db.Donkeys.Add(donkey);
                 await _db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
