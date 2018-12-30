@@ -33,14 +33,14 @@ namespace MvcAppUg.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return BackToIndex();
             }
 
             var donkey = await _db.Donkeys.SingleOrDefaultAsync(m => m.Id == id);
 
             if (donkey == null)
             {
-                return NotFound();
+                return BackToIndex();
             }
             return View(donkey);
         }
@@ -48,12 +48,22 @@ namespace MvcAppUg.Controllers
         //post
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RemoveDonkey(int id)
+        public async Task<IActionResult> RemoveDonkey(int? id)
         {
+            if (id == null)
+            {
+                return BackToIndex();
+            }
+
             var donkey = await _db.Donkeys.SingleOrDefaultAsync(m => m.Id == id);
+
+            if (donkey == null)
+            {
+                return BackToIndex();
+            }
             _db.Donkeys.Remove(donkey);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return BackToIndex();
         }
 
 
@@ -77,6 +87,11 @@ namespace MvcAppUg.Controllers
             {
                 _db.Dispose();
             }
+        }
+
+        private RedirectToActionResult BackToIndex()
+        {
+            return RedirectToAction("Index");
         }
     }
 }
