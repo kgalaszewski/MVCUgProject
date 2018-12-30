@@ -1,0 +1,42 @@
+﻿@model  IEnumerable<MvcAppUg.Models.Donkey>
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+<br />
+<h2>Donkeys List</h2>
+<hr />	
+<p>
+	<a asp-action="Create" class="btn btn-sm btn-primary">Add new Donkey z biedronki</a>
+</p>
+<br />
+
+<div>
+	<table class="table">
+		<tr>
+			<th>
+				@Html.DisplayNameFor(m=>m.Name)
+			</th>
+			<th>
+
+			</th>
+		</tr>
+		@foreach (var item in Model)
+		{
+		<tr>
+			<td>
+				@Html.DisplayFor(m => item.Name)
+			</td>
+			<td>
+				<a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-success">Edit</a>
+				<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-success">Details</a>
+				<a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+			</td>
+			<td></td>
+			<td></td>
+		</tr>
+		}
+	</table>
+
+</div>
