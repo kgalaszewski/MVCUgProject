@@ -7,6 +7,9 @@ namespace MvcAppUg.Interfaces
 {
     interface ISampleInterface
     {
-        //tam, tam tam, tam tam tam ta ram, tam tam... tutu rutu tu tu tuuuuuu
+        // Tutaj nie chodzimy
+        string Roshamuul { get; }
+        string Oramond { get; }
+
     }
 }
